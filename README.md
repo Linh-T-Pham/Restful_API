@@ -2,7 +2,7 @@
 
 - Clone repository 
 
-    $ git clone 
+    $ git clone https://github.com/thuytpham/MH_Restful_API.git
 
 - Create database
 
