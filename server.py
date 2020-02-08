@@ -133,6 +133,7 @@ def create_section_in_program(program_name):
                         description = description,
                         overview_Image_url = overview_Image_url
                         )
+
         db.session.add(new_section)
         db.session.commit()
         return jsonify(serialize_section(new_section))
@@ -145,52 +146,53 @@ def create_section_in_program(program_name):
 @app.route('/program/<string:program_name>/section/<string:section_name>/activity')
 def get_activities_in_section(program_name, section_name):
     """Get method for all activities in section for one program"""
-    for program in programs:
-        if program.program_name == program_name:
-            sections = Section.query.filter_by(program_id=program.program_id) # Get a list of sections in the program
-            for section in sections:
-                if section.section_name == section_name:  
-                    # I can pass activities json to jinja later and display 
-                    #either question or html content on the front end 
-                    all_activities = Activity.query.filter_by(section_id=section.section_id)
-                    activities_list = []
-                    for each_activity in all_activities:
-                        activities_dict = serialize_activity(each_activity)
-                        activities_list.append(activities_dict)     
-                    return jsonify({ 'all_activities_key': activities_list })
-                
-                else:
-                    return 'Can not find', 404
+    program = Program.query.filter_by(program_name=program_name).first()
+    if program is not None:
+        if section is not None: 
+            # I can pass activities json to jinja later and display 
+            #either question or html content on the front end 
+            all_activities = Activity.query.filter_by(section_id=section.section_id)
+            activities_list = []
+            for each_activity in all_activities:
+                activities_dict = serialize_activity(each_activity)
+                activities_list.append(activities_dict)     
+            return jsonify({ 'all_activities_key': activities_list })
+        
+        else:
+            return 'Can not find', 404
+    else:
+        return 'Can not find', 404
 
 
 # POST /program/<string:name>/section/<string:section_name>/activity
 @app.route('/program/<string:program_name>/section/<string:section_name>/activity', methods=['POST'])
 def create_activity_in_section(program_name, section_name):
     """Make request to activity endpoint"""
-    request_data = request_data.get_json()
-    for program in programs:
-        if program.program_name == program_name:
-            for section in program.section:
-                if section.activity == activity:
-                    html_content = request_data['html_content']
-                    question = request_data['question']
-                    multiple_choice_answers = request_data['multiple_choice_answers']
-                    right_answer = request_data['right_answer']
-                    new_activity = Activity(
-                                            html_content = html_content,
-                                            question = question,
-                                            multiple_choice_answers = multiple_choice_answers,
-                                            right_answer = right_answer
-                                            )
+    program = Program.query.filter_by(program_name=program_name).first()
+    if program is not None: 
+        section = Section.query.filter_by(section_name=section_name).first()
+        if section is not None: 
+            request_data = request_data.get_json()
+            html_content = request_data['html_content']
+            question = request_data['question']
+            multiple_choice_answers = request_data['multiple_choice_answers']
+            right_answer = request_data['right_answer']
+            new_activity = Activity(
+                                    html_content = html_content,
+                                    question = question,
+                                    multiple_choice_answers = multiple_choice_answers,
+                                    right_answer = right_answer
+                                    )
                
             db.session.add(new_activity)
             db.session.commit()
-            activity_dict = serialize_activity(new_activity)
-            return jsonify(activity_dict)
+            return jsonify(serialize_activity(activity_dict))
+        else:
+            return 'Can not find the section', 404
+    else:
+        return 'Can not find the program', 404
 
     
-
-
 
 
 
