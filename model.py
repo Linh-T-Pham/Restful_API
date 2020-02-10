@@ -41,12 +41,12 @@ class Section(db.Model):
     def __repr__(self):
         """Provide helpful representation when printing"""
 
-        return f"""<Section section_id={self.section_id} 
-                    program_id={self.program_id} 
-                    section_name={self.section_name}
-                    description={self.description}
-                    overview_Image_URL={self.overview_Image_URL}
-                    image_url={self.image_url}>"""
+        return f'<Section section_id={self.section_id}\
+                    program_id={self.program_id} \
+                    section_name={self.section_name}\
+                    description={self.description}\
+                    overview_Image_URL={self.overview_Image_URL}\
+                    image_url={self.image_url}>'
 
 
 class Activity(db.Model):
@@ -66,12 +66,12 @@ class Activity(db.Model):
     def __repr__(self):
         """Provide helpful representation when printing"""
 
-        return f"""<Activity activity_id={self.activity_id} 
-                    section_id={self.section_id} 
-                    question={self.question}
-                    multiple_choice_answers={self.multiple_choice_answers}
-                    html_content = {self.html_content}
-                    right_answer={self.right_answer}>"""
+        return f'<Activity activity_id={self.activity_id}\
+                    section_id={self.section_id}\
+                    question={self.question}\
+                    multiple_choice_answers={self.multiple_choice_answers}\
+                    html_content = {self.html_content}\
+                    right_answer={self.right_answer}>'
 
         
 #################################################
@@ -95,3 +95,15 @@ if __name__ == "__main__":
 
     connect_to_db(app)
     print("Connected to DB.")
+
+###########################################
+#Helper function for testing
+
+def init_app():
+    from flask import Flask
+    app = Flask(__name__)
+
+
+    # connect_to_db(app, 'postgresql:///testdb')
+    # print('Connected to DB.')
+
