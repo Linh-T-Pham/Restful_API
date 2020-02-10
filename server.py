@@ -72,6 +72,27 @@ def delete_program(program_name):
     db.session.commit()
     return 'Deleted', 200
 
+@app.route('/program/<string:program_name>', methods=['PATCH'])
+def patch_program(program_name):
+    """Update 1 program"""
+    update_program = Program.query.filter_by(program_name=program_name).first()
+
+    update_data = request.get_json()
+    name = update_data['program_name']
+    new_description = update_data['description']
+
+
+    # print(f'\n\n\n\t{update_program}\n\n\n')
+
+    setattr(update_program, 'program_name', name)
+    setattr(update_program, 'description', new_description)
+    
+    db.session.commit()
+    
+
+
+
+
 # ****Section********
 
 def serialize_section(section):
