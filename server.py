@@ -65,11 +65,11 @@ def get_program(program_name):
         return 'Can not find the program', 404
 
 # DELETE /program/<string:name>
-@app.route('/program/<string:program_name>', methods=['POST'])
+@app.route('/program/<string:program_name>', methods=['DELETE'])
 def delete_program(program_name):
     delete_program = Program.query.filter_by(program_name=program_name).first()
     db.session.delete(delete_program)
-    db.session()
+    db.session.commit()
     return 'Deleted', 200
 
 # ****Section********
@@ -151,7 +151,7 @@ def create_section_in_program(program_name):
         return 'Cannot find the program', 404 
 
 # DELETE /program/<string:program_name>/section
-@app.route('/program/<string:program_name>/section', methods=['POST'])
+@app.route('/program/<string:program_name>/section', methods=['DELETE'])
 def delete_sections_in_program(program_name):
     """Delete all sections in one program"""
     program = Program.query.filter_by(program_name=program_name).first()
@@ -218,7 +218,7 @@ def create_activity_in_section(program_name, section_name):
 
 
 # DELETE /program/<string:name>/section/<string:section_name>/activity
-@app.route('/program/<string:program_name>/section/<string:section_name>/activity', methods=['POST'])
+@app.route('/program/<string:program_name>/section/<string:section_name>/activity', methods=['DELETE'])
 def delete_all_activities(program_name, section_name):
     """Delete all activities"""
     program = Program.query.filter_by(program_name=program_name).first()
