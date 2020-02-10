@@ -9,10 +9,11 @@ app = Flask(__name__)
 # ****Program*****
 
 def serialize_program(program):
-    print('\n\n\n\t\t INSIDE SERIALIZE\n\n\n')
+    # print('\n\n\n\t\t INSIDE SERIALIZE\n\n\n')
+    """Helper function"""
     program_dict = {
         'id': program.program_id,
-        'name': program.program_name,
+        'program_name': program.program_name,
         'description': program.description,
         'sections': [],
     }
@@ -21,7 +22,6 @@ def serialize_program(program):
         program_dict['sections'].append(section.section_name)
 
     return program_dict
-
 
 # GET /program
 @app.route('/program')
@@ -34,12 +34,12 @@ def get_programs():
         result.append(program_dict)
     return jsonify({ 'all_programs_key': result })
 
-# POST /program data
+# POST /program
 @app.route('/program', methods=['POST'])
 def create_programs():
     """ Make request to /program endpoint"""
     request_data = request.get_json()
-    program_name =  request_data['program_name']
+    program_name = request_data['program_name']
     description = request_data['description']
     new_program = Program(
                     program_name = program_name, 
@@ -64,9 +64,18 @@ def get_program(program_name):
     else:
         return 'Can not find the program', 404
 
+# DELETE /program/<string:name>
+@app.route('/program/<string:program_name>', methods=['POST'])
+def delete_program(program_name):
+    delete_program = Program.query.filter_by(program_name=program_name).first()
+    db.session.delete(delete_program)
+    db.session()
+    return 'Deleted', 200
+
 # ****Section********
 
 def serialize_section(section):
+    """Helper Function"""
     section_dict = {
         'id': section.section_id,
         'name': section.section_name,
@@ -80,6 +89,7 @@ def serialize_section(section):
     return section_dict
 
 def serialize_activity(activity):
+    """Helper Function"""
     activity_dict = {
         'html_content': activity.html_content,
         'question': activity.question,
@@ -140,6 +150,19 @@ def create_section_in_program(program_name):
     else:
         return 'Cannot find the program', 404 
 
+# DELETE /program/<string:program_name>/section
+@app.route('/program/<string:program_name>/section', methods=['POST'])
+def delete_sections_in_program(program_name):
+    """Delete all sections in one program"""
+    program = Program.query.filter_by(program_name=program_name).first()
+    if program is not None:
+        delete_all_sections = Section.query.filter_by(program_id=program.program_id)
+        db.session.delete(delete_all_sections)
+        db.session.commit()
+
+        return 'Deleted', 200
+
+
 # *******Activity*******
 
 # GET /program/<string:name>/section/<string:section_name>/activity
@@ -148,6 +171,7 @@ def get_activities_in_section(program_name, section_name):
     """Get method for all activities in section for one program"""
     program = Program.query.filter_by(program_name=program_name).first()
     if program is not None:
+        section = Section.query.filter_by(section_name=section_name).first()
         if section is not None: 
             # I can pass activities json to jinja later and display 
             #either question or html content on the front end 
@@ -192,7 +216,24 @@ def create_activity_in_section(program_name, section_name):
     else:
         return 'Can not find the program', 404
 
+
+# DELETE /program/<string:name>/section/<string:section_name>/activity
+@app.route('/program/<string:program_name>/section/<string:section_name>/activity', methods=['POST'])
+def delete_all_activities(program_name, section_name):
+    """Delete all activities"""
+    program = Program.query.filter_by(program_name=program_name).first()
+    if program is not None:
+        section = Section.query.filter_by(section_name=section_name).first()
+        if section is not None: 
+            delete_all_activities = Activity.query.filter_by(section_id=section.section_id)
+            db.session.delete(delete_all_activities)
+            db.session.commit()
+            return 'Deleted', 200
+
+
     
+
+
 
 
 
