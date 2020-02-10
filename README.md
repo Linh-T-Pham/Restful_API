@@ -19,3 +19,7 @@
 - Run the app
 
     $ python3 server.py 
+
+- Run test_API.py
+
+    $ python3 test_API.py
