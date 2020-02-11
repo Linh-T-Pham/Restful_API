@@ -20,7 +20,6 @@ def serialize_program(program):
 
     for section in program.sections:
         program_dict['sections'].append(section.section_name)
-
     return program_dict
 
 # GET /program
@@ -48,7 +47,7 @@ def create_programs():
 
     db.session.add(new_program)
     db.session.commit()
-    program_dict = serialize_program(new_program)
+    program_dict = serialize_program(new_program)   
     return jsonify(program_dict)
 
 
@@ -72,6 +71,7 @@ def delete_program(program_name):
     db.session.commit()
     return 'Deleted', 200
 
+#PATCH /program/<string:name>
 @app.route('/program/<string:program_name>', methods=['PATCH'])
 def patch_program(program_name):
     """Update 1 program"""
@@ -81,18 +81,13 @@ def patch_program(program_name):
     name = update_data['program_name']
     new_description = update_data['description']
 
-
     # print(f'\n\n\n\t{update_program}\n\n\n')
 
-    setattr(update_program, 'program_name', name)
-    setattr(update_program, 'description', new_description)
+    setattr(update_program, 'program_name', name) # program_name has to be string
+    setattr(update_program, 'description', new_description) # description has to be string
     
     db.session.commit()
     
-
-
-
-
 # ****Section********
 
 def serialize_section(section):
@@ -106,7 +101,6 @@ def serialize_section(section):
         }
     for activity in section.activities:
         section_dict['activities'].append(section.serialize_activity(activity))
-
     return section_dict
 
 def serialize_activity(activity):
@@ -117,7 +111,6 @@ def serialize_activity(activity):
         'multiple_choice_answers': activity.multiple_choice_answers,
         'right_answer': activity.right_answer,
         }
-
     return activity_dict
 
 # GET /program/<string:name>/section
@@ -180,9 +173,7 @@ def delete_sections_in_program(program_name):
         delete_all_sections = Section.query.filter_by(program_id=program.program_id)
         db.session.delete(delete_all_sections)
         db.session.commit()
-
         return 'Deleted', 200
-
 
 # *******Activity*******
 
@@ -201,8 +192,7 @@ def get_activities_in_section(program_name, section_name):
             for each_activity in all_activities:
                 activities_dict = serialize_activity(each_activity)
                 activities_list.append(activities_dict)     
-            return jsonify({ 'all_activities_key': activities_list })
-        
+            return jsonify({ 'all_activities_key': activities_list })       
         else:
             return 'Can not find', 404
     else:
@@ -253,6 +243,7 @@ def delete_all_activities(program_name, section_name):
 
 
     
+
 
 
 
