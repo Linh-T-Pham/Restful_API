@@ -3,6 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, Program, Section, Activity
 import os 
+import sys
+
+
 
 app = Flask(__name__)
 
@@ -11,22 +14,23 @@ app = Flask(__name__)
 def serialize_program(program):
     # print('\n\n\n\t\t INSIDE SERIALIZE\n\n\n')
     """Helper function"""
-    program_dict = {
+    program_dict = {    
         'id': program.program_id,
         'program_name': program.program_name,
         'description': program.description,
-        'sections': [],
+        'sections': [],  
     }
 
     for section in program.sections:
+
         program_dict['sections'].append(section.section_name)
     return program_dict
 
 # GET /program
-@app.route('/program')
+@app.route('/program') 
 def get_programs():
     """Get method for all the programs"""
-    all_programs = Program.query.all()
+    all_programs = Program.query.all() 
     result = []
     for program in all_programs:
         program_dict = serialize_program(program)
@@ -35,9 +39,9 @@ def get_programs():
 
 # POST /program
 @app.route('/program', methods=['POST'])
-def create_programs():
-    """ Make request to /program endpoint"""
-    request_data = request.get_json()
+def create_program():
+    """ Make request to/program endpoint"""
+    request_data = request.get_json() 
     program_name = request_data['program_name']
     description = request_data['description']
     new_program = Program(
@@ -61,7 +65,7 @@ def get_program(program_name):
         program_dict = serialize_program(program)
         return jsonify(program_dict)
     else:
-        return 'Can not find the program', 404
+        return 'Can not find the program', 404 
 
 # DELETE /program/<string:name>
 @app.route('/program/<string:program_name>', methods=['DELETE'])
@@ -83,9 +87,8 @@ def patch_program(program_name):
 
     # print(f'\n\n\n\t{update_program}\n\n\n')
 
-    setattr(update_program, 'program_name', name) # program_name has to be string
-    setattr(update_program, 'description', new_description) # description has to be string
-    
+    setattr(update_program, 'program_name', name) 
+    setattr(update_program, 'description', new_description)  
     db.session.commit()
     
 # ****Section********

@@ -15,8 +15,8 @@ class FlaskTests(unittest.TestCase):
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     def test_all_programs(self):
-        """Test POST request for all programs"""
-        result = self.client.post("/program",data =
+        """Test GET request for all programs"""
+        result = self.client.get("/program",data =
                                         {"all_programs_key": [
                                         {
                                           "description": "hi",
@@ -67,22 +67,20 @@ class FlaskTests(unittest.TestCase):
         self.assertIN(b'Woah! Working', result.data)
 
 
-    def test_program(self):
-        """Test POST request for one program"""
+    # def test_program(self):
+    #     """Test GET request for one program"""
       
-        result = self.client.post('/program/Linh', data={
-                                        "description": "hi",
-                                        "id": 1,
-                                        "name": "Linh",
-                                        "sections": []
-                                        })
-        self.assertEqual(result.status_code, 200)
-        self.assertIn(b'Woah! Working', result.data)
+    #     result = self.client.get('/program', data={
+    #                 "program_name": "linh6", 
+    #                 "description" : "this is the best program"
+    #                 })
+    #     self.assertEqual(result.status_code, 200)
+    #     self.assertIn(b'Woah! Working', result.data)
 
     def test_one_section(self):
-        """Test POST request for one section in one program"""
+        """Test GET request for one section in one program"""
 
-        result = self.client.post('/program/Linh/section', data ={
+        result = self.client.get('/program/Linh/section', data ={
                                             "section_name": "section_1_name",
                                             "description": "section_1_detail",
                                             "overview_Image_url": "http://awesome.io",
@@ -94,16 +92,24 @@ class FlaskTests(unittest.TestCase):
         self.assertIn(b'Woah! Working', result.data)
 
     def test_activity(self):
-        """Test POST request for all activity for one section in one program"""
+        """Test GET request for all activity for one section in one program"""
 
-        result = self.client.post('/program/Linh/section/section_1_name/activity', data={
+        result = self.client.get('/program/Linh/section/section_1_name/activity', data={
                                                                             "all_activities_key": []
                                                                              })
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'Woah! Working', result.data)
 
 
-
+ def test_program(self):
+        """Test POST request for one program"""
+      
+        result = self.client.post('/program', data={
+                    "program_name": "linh6", 
+                    "description" : "this is the best program"
+                    })
+        self.assertEqual(result.status_code, 200)
+        self.assertIn(b'Woah! Working', result.data)
 
 
 

@@ -3,6 +3,17 @@ from flask import Flask
 
 db = SQLAlchemy()
 
+# ORM: Object relational mappers. I used classes to model object which 
+# were stored in a database. A table is more or less equivalent 
+# to a class definition.Each coumn can be thought as of an attribute
+# or property of that class. Each row is also analogous to an instantiation 
+# of the class. The analogy allow us to constuct software through self-
+# examination, can automatically write and execute SQL queries for us
+# without the programmer having to stop and think about the SQL required
+# to accomplish a task. The ORM helps to avoid to write significant 
+# amount of repetitive code. Insted of writing a lot of code to handle
+# SQL, it peeks at the class definition and uses the information 
+# gathered to generate appropriate SQL 
 
 class Program(db.Model):
     """Program. A program has many sections."""
@@ -16,6 +27,7 @@ class Program(db.Model):
 
     def __repr__(self):
         """Provide helpful representation when printing"""
+        #If you define this method on a class, when Python tries to “represent” an instance of this class 
 
         return f'<Program program_id={self.program_id} \
                 program_name={self.program_name} \
@@ -31,7 +43,10 @@ class Section(db.Model):
     program_id = db.Column(db.Integer, db.ForeignKey('programs.program_id'))
     section_name = db.Column(db.String(100), unique = True)
     description = db.Column(db.String(200))
-    overview_Image_url= db.Column(db.String(100), default=None, nullable=True)
+    overview_Image_url= db.Column(db.String(100), default=None, nullable=True) 
+    # Nullable#That tells SQLAlchemy (and thus, PostgreSQL) that this column is optional
+    
+
     # I think there is no need for order_index because sector_id is autoincrement
     # order_index = db.Colum(db.Integer)   
     
