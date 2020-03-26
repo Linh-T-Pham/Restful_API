@@ -3,17 +3,6 @@ from flask import Flask
 
 db = SQLAlchemy()
 
-# ORM: Object relational mappers. I used classes to model object which 
-# were stored in a database. A table is more or less equivalent 
-# to a class definition.Each coumn can be thought as of an attribute
-# or property of that class. Each row is also analogous to an instantiation 
-# of the class. The analogy allow us to constuct software through self-
-# examination, can automatically write and execute SQL queries for us
-# without the programmer having to stop and think about the SQL required
-# to accomplish a task. The ORM helps to avoid to write significant 
-# amount of repetitive code. Insted of writing a lot of code to handle
-# SQL, it peeks at the class definition and uses the information 
-# gathered to generate appropriate SQL 
 
 class Program(db.Model):
     """Program. A program has many sections."""
@@ -88,6 +77,20 @@ class Activity(db.Model):
                     html_content = {self.html_content}\
                     right_answer={self.right_answer}>'
 
+##################################################
+
+# NOTE 
+# ORM: Object relational mappers. I used classes to model object which 
+# were stored in a database. A table is more or less equivalent 
+# to a class definition.Each coumn can be thought as of an attribute
+# or property of that class. Each row is also analogous to an instantiation 
+# of the class. The analogy allow us to constuct software through self-
+# examination, can automatically write and execute SQL queries for us
+# without the programmer having to stop and think about the SQL required
+# to accomplish a task. The ORM helps to avoid to write significant 
+# amount of repetitive code. Insted of writing a lot of code to handle
+# SQL, it peeks at the class definition and uses the information 
+# gathered to generate appropriate SQL 
         
 #################################################
 #Helper Functions 
